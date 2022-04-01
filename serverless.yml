@@ -1,0 +1,215 @@
+service: weatherStreamApp
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  memorySize: 128
+  timeout: 15
+  region: us-east-1
+  versionFunctions: false
+  stage: dev
+  environment:
+    DYNAMODB_TABLE_NAME: ${ssm:weatherapp-us-east-1-dbtable} 
+    DYNAMODB_TABLE_ARN: ${ssm:/DynamoDB/TableArn} 
+  #   DYNAMODB_STREAM_ARN: ${ssm:/DynamoDB/StreamArn} 
+  #   IVS_CHANNEL_ARN: ${ssm:/ivs/ChannelArn}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeStream
+        - dynamodb:GetRecords
+        - dynamodb:GetShardIterator
+        - dynamodb:ListStreams
+        - ivs:PutMetadata
+        # - lambda:InvokeFunction
+      Resource: 
+        - ${ssm:/DynamoDB/TableArn} 
+        # - ${ssm:/ivs/ChannelArn}
+        # - "arn:aws:lambda:${opt:region, self:provider.region}:*:function:${self:service}-${opt:stage, self:provider.stage}-getWeather"
+        
+
+functions:
+  # cronPrilep:
+  #   handler: cronPrilep.prilep
+  #   description: Cron event taking data from api.openweathermap.org for Prilep
+  #   events:
+  #     - schedule: 
+  #         rate: rate(2 minutes)
+  #         enabled: true
+
+  # cronBitola:
+  #   handler: cronBitola.bitola
+  #   description: Cron event taking data from api.openweathermap.org for Bitola
+  #   events:
+  #     - schedule: 
+  #         rate: rate(2 minutes)
+  #         enabled: true
+
+  # cronSkopje:
+  #   handler: cronSkopje.skopje
+  #   description: Cron event taking data from api.openweathermap.org for Skopje
+  #   events:
+  #     - schedule: 
+  #         rate: rate(2 minutes)
+  #         enabled: true
+
+  promiseConfig:
+    handler: promiseConfig.config
+    description: Cron event taking data from api.openweathermap.org for Prilep
+    events:
+      - schedule: 
+          rate: rate(2 minutes)
+          enabled: true
+
+  cronA:
+    handler: cronA.a
+    description: Cron event taking data from api.openweathermap.org for Prilep
+    events:
+      - schedule: 
+          rate: rate(2 minutes)
+          enabled: true
+
+  # streamDynamoDB:
+  #   handler: streamDynamoDB.streamdb
+  #   events:
+  #     - stream:
+  #         type: dynamodb
+  #         arn: ${ssm:/DynamoDB/StreamArn} 
+  #         batchSize: 10 
+  #         startingPosition: LATEST
+  #         enabled: true
+
+# provider:
+#   name: aws
+#   runtime: nodejs14.x
+#   memorySize: 128
+#   timeout: 5
+#   region: us-east-1
+#   versionFunctions: false
+#   stage: dev
+#   environment:
+#     # WEATHER_APPID: YOUR_APPID_HERE
+#     HANDLER_LOCATION: ${self:service}-${opt:stage, self:provider.stage}
+#     # DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+#     # S3_ENDPOINT: ${ssm:/s3/website_endpoint}
+#   iamRoleStatements:
+#     - Effect: Allow
+#       Action:
+#         - dynamodb:Query
+#         - dynamodb:Scan
+#         - dynamodb:GetItem
+#         - dynamodb:PutItem
+#         - dynamodb:UpdateItem
+#         - dynamodb:DeleteItem
+#         - dynamodb:DescribeStream
+#         - dynamodb:GetRecords
+#         - dynamodb:GetShardIterator
+#         - dynamodb:ListStreams
+#         - lambda:InvokeFunction
+#       Resource: 
+#         - "arn:aws:dynamodb:us-east-1:076552670183:table/weatherstreamapp"
+#         - "arn:aws:lambda:${opt:region, self:provider.region}:*:function:${self:service}-${opt:stage, self:provider.stage}-getWeather"
+
+# functions:
+#   getWeather:
+#     handler: chron.getWeather
+    
+#   cron_launcher:
+#     handler: chron.cron_launcher
+#     events:
+#       - schedule: 
+#           description: 'Gathers Weather 1 time per hour and stores it in DynomoDb'
+#           rate: rate(2 minutes)
+#           enabled: true
+
+
+
+
+# #######
+
+# service: weatherStreamApp
+
+# frameworkVersion: '3'
+
+# plugins:
+#   - serverless-offline
+#   - serverless-dynamodb-local
+
+# provider:
+#   name: aws
+#   runtime: nodejs14.x
+#   memorySize: 128
+#   timeout: 15
+#   region: us-east-1
+#   versionFunctions: false
+#   stage: dev
+#   # environment:
+#   #   DYNAMODB_TABLE_NAME: ${ssm:weatherapp-us-east-1-dbtable} 
+#   #   DYNAMODB_TABLE_ARN: ${ssm:/DynamoDB/TableArn} 
+#   #   DYNAMODB_STREAM_ARN: ${ssm:/DynamoDB/StreamArn} 
+#   #   IVS_CHANNEL_ARN: ${ssm:/ivs/ChannelArn}
+#   iamRoleStatements:
+#     - Effect: "Allow"
+#       Action:
+#         - dynamodb:DescribeTable
+#         - dynamodb:Query
+#         - dynamodb:Scan
+#         - dynamodb:GetItem
+#         - dynamodb:PutItem
+#         - dynamodb:UpdateItem
+#         - dynamodb:DeleteItem
+#         - dynamodb:DescribeStream
+#         - dynamodb:GetRecords
+#         - dynamodb:GetShardIterator
+#         - dynamodb:ListStreams
+#         - ivs:PutMetadata
+#         # - lambda:InvokeFunction
+#       Resource: 
+#         - ${env:DYNAMODB_TABLE_ARN}
+#         - ${env:IVS_CHANNEL_ARN}
+#         # - "arn:aws:lambda:${opt:region, self:provider.region}:*:function:${self:service}-${opt:stage, self:provider.stage}-getWeather"
+        
+
+# functions:
+#   cronPrilep:
+#     handler: cronPrilep.prilep
+#     description: Cron event taking data from api.openweathermap.org for Prilep
+#     events:
+#       - schedule: 
+#           rate: rate(2 minutes)
+#           enabled: true
+
+#   cronBitola:
+#     handler: cronBitola.bitola
+#     description: Cron event taking data from api.openweathermap.org for Bitola
+#     events:
+#       - schedule: 
+#           rate: rate(2 minutes)
+#           enabled: true
+
+#   cronSkopje:
+#     handler: cronSkopje.skopje
+#     description: Cron event taking data from api.openweathermap.org for Skopje
+#     events:
+#       - schedule: 
+#           rate: rate(2 minutes)
+#           enabled: true
+
+#   streamDynamoDBs:
+#     handler: streamDynamoDBs.streamdb
+#     events:
+#       - stream:
+#           type: dynamodb
+#           arn: ${env:DYNAMODB_STREAM_ARN}
+#           batchSize: 10 
+#           startingPosition: LATEST
+#           enabled: true
