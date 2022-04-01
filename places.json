@@ -1,0 +1,16 @@
+{
+    "places": [
+        {
+            "city": "Prilep",
+            "country": "Macedonia"
+        },
+        {
+            "city": "Bitola",
+            "country": "Macedonia"
+        },
+        {
+            "city": "Skopje",
+            "country": "Macedonia"
+        }
+    ]
+}
